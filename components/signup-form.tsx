@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { Eye, EyeOff, Key } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
@@ -14,8 +15,9 @@ import { Spinner, FullPageSpinner } from "@/components/ui/spinner"
 
 export function SignupForm({
   className,
-  ...props
-}: React.ComponentProps<"div">) {
+}: {
+  className?: string
+}) {
   const [fullName, setFullName] = useState("")
   const [email, setEmail] = useState("")
   const [familyKey, setFamilyKey] = useState("")
@@ -86,7 +88,12 @@ export function SignupForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={cn("flex flex-col gap-6", className)}
+    >
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit} className="p-6 md:p-8">
@@ -94,7 +101,7 @@ export function SignupForm({
               <div className="flex flex-col items-center gap-1 text-center">
                 <h1 className="text-2xl font-bold">Join the Family</h1>
                 <p className="text-muted-foreground text-sm text-balance">
-                  Create your Omoyele Family account
+                  Create your Family account
                 </p>
               </div>
               {error && (
@@ -152,9 +159,7 @@ export function SignupForm({
                       {showFamilyKey ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                     </button>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Ask a family member for the key to join
-                  </p>
+                  
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? (
@@ -184,6 +189,6 @@ export function SignupForm({
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   )
 }

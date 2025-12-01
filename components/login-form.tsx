@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import { motion } from "framer-motion"
 import { Eye, EyeOff, Key } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
@@ -14,8 +15,9 @@ import { Spinner, FullPageSpinner } from "@/components/ui/spinner"
 
 export function LoginForm({
   className,
-  ...props
-}: React.ComponentProps<"div">) {
+}: {
+  className?: string
+}) {
   const [email, setEmail] = useState("")
   const [familyKey, setFamilyKey] = useState("")
   const [showFamilyKey, setShowFamilyKey] = useState(false)
@@ -77,7 +79,12 @@ export function LoginForm({
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className={cn("flex flex-col gap-6", className)}
+    >
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form onSubmit={handleSubmit} className="p-6 md:p-8">
@@ -85,7 +92,7 @@ export function LoginForm({
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome Back</h1>
                 <p className="text-muted-foreground text-sm text-balance">
-                  Sign in to your Omoyele Family account
+                  Sign in to your Family account
                 </p>
               </div>
               {error && (
@@ -160,6 +167,6 @@ export function LoginForm({
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   )
 }
