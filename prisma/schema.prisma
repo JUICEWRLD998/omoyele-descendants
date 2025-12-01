@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User model - linked to Firebase Auth via firebaseUid
+model User {
+  id            String   @id @default(cuid())
+  firebaseUid   String   @unique // Firebase Auth UID
+  email         String   @unique
+  firstName     String
+  lastName      String
+  displayName   String?
+  photoURL      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relation to family member (optional - user can link to family tree later)
+  familyMember  FamilyMember?
+}
+
+// Family member in the tree
+model FamilyMember {
+  id            String   @id @default(cuid())
+  firstName     String
+  lastName      String
+  birthDate     DateTime?
+  deathDate     DateTime?
+  gender        String?
+  bio           String?
+  photoURL      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Self-referential relations for family tree
+  parentId      String?
+  parent        FamilyMember?  @relation("ParentChild", fields: [parentId], references: [id])
+  children      FamilyMember[] @relation("ParentChild")
+
+  // Spouse relation
+  spouseId      String?        @unique
+  spouse        FamilyMember?  @relation("Spouse", fields: [spouseId], references: [id])
+  spouseOf      FamilyMember?  @relation("Spouse")
+
+  // Link to user account (if they have one)
+  userId        String?        @unique
+  user          User?          @relation(fields: [userId], references: [id])
+}

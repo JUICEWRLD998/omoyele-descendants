@@ -1,14 +1,17 @@
+"use client"
+
 import { Navigation } from "@/components/navigation"
+import { SplashScreen } from "@/components/splash-screen"
 import Link from "next/link"
 import { ArrowRight, Leaf, Search, Users } from "lucide-react"
 
 export default function Home() {
   return (
-    <>
+    <SplashScreen>
       <Navigation />
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <section className="relative py-20 md:py-32 px-4 sm:px-6 lg:px-8 bg-linear-to-br from-primary/5 via-background to-accent/5">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-balance mb-6 text-foreground">
               Discover Your Family's Story
@@ -94,7 +97,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-primary/10 to-accent/10">
+        <section className="py-16 md:py-24 px-4 sm:px-6 lg:px-8 bg-linear-to-r from-primary/10 to-accent/10">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">Ready to explore your roots?</h2>
             <p className="text-lg text-foreground/70 mb-8">
@@ -136,6 +139,6 @@ export default function Home() {
           </div>
         </footer>
       </main>
-    </>
+    </SplashScreen>
   )
 }
