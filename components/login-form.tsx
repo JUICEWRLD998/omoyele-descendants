@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, Key } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -17,13 +17,40 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
+  const [familyKey, setFamilyKey] = useState("")
+  const [showFamilyKey, setShowFamilyKey] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [redirecting, setRedirecting] = useState(false)
   const router = useRouter()
   const { signIn } = useAuth()
+
+  // Convert error messages to user-friendly messages
+  const getErrorMessage = (error: unknown): string => {
+    if (error instanceof Error) {
+      const message = error.message
+      if (message.includes("Invalid family key")) {
+        return "Invalid family key. Please check and try again."
+      }
+      if (message.includes("auth/invalid-credential") || message.includes("auth/wrong-password") || message.includes("auth/user-not-found")) {
+        return "Invalid email or family key. Please try again."
+      }
+      if (message.includes("auth/invalid-email")) {
+        return "Please enter a valid email address."
+      }
+      if (message.includes("auth/user-disabled")) {
+        return "This account has been disabled. Please contact a family admin."
+      }
+      if (message.includes("auth/network-request-failed")) {
+        return "Network error. Please check your internet connection."
+      }
+      if (message.includes("auth/too-many-requests")) {
+        return "Too many failed attempts. Please try again later."
+      }
+      return message
+    }
+    return "Failed to sign in. Please try again."
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +58,7 @@ export function LoginForm({
     setLoading(true)
 
     try {
-      await signIn(email, password)
+      await signIn(email, familyKey)
       setLoading(false)
       setRedirecting(true)
       // Show spinner for 2 seconds before redirecting to home
@@ -39,8 +66,7 @@ export function LoginForm({
         router.push("/")
       }, 2000)
     } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to sign in"
-      setError(errorMessage)
+      setError(getErrorMessage(err))
       setLoading(false)
     }
   }
@@ -81,25 +107,28 @@ export function LoginForm({
                   />
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="familyKey" className="flex items-center gap-2">
+                    <Key className="size-4" />
+                    Family Key
+                  </Label>
                   <div className="relative">
                     <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      id="familyKey"
+                      type={showFamilyKey ? "text" : "password"}
+                      placeholder="Enter the family key"
+                      value={familyKey}
+                      onChange={(e) => setFamilyKey(e.target.value)}
                       required
                       disabled={loading}
                       className="pr-10"
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => setShowFamilyKey(!showFamilyKey)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                       tabIndex={-1}
                     >
-                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                      {showFamilyKey ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                     </button>
                   </div>
                 </div>

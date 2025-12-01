@@ -4,7 +4,16 @@ import { prisma } from "@/lib/prisma"
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, firstName, lastName, firebaseUid } = body
+    const { email, firstName, lastName, firebaseUid, familyKey } = body
+
+    // Validate family key
+    const validFamilyKey = process.env.FAMILY_KEY
+    if (!familyKey || familyKey !== validFamilyKey) {
+      return NextResponse.json(
+        { error: "Invalid family key. Please contact a family member for the correct key." },
+        { status: 401 }
+      )
+    }
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
