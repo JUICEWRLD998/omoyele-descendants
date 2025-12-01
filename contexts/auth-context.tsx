@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Try to create user in database (but don't fail if it doesn't work)
     try {
       const token = await firebaseUser.getIdToken()
-      await fetch("/api/auth/register", {
+      const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,6 +82,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           familyKey,
         }),
       })
+      
+      if (!response.ok) {
+        const errorData = await response.text()
+        console.error("Database registration failed:", errorData)
+      } else {
+        console.log("User saved to database successfully")
+      }
     } catch (dbError) {
       // Log but don't fail - Firebase auth is the primary auth
       console.error("Failed to save user to database:", dbError)
