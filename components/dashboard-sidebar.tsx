@@ -102,10 +102,10 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
       </nav>
 
       {/* Logout Only */}
-      <div className="p-4 mt-auto">
+      <div className="p-4 mt-auto border-t border-sidebar-border/50">
         <Button
-          variant="ghost"
-          className="w-full justify-start gap-3 text-sidebar-foreground/70 hover:bg-destructive/10 hover:text-destructive"
+          variant="outline"
+          className="w-full justify-start gap-3 border-sidebar-border/50 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all"
           onClick={handleLogout}
         >
           <LogOut className="h-4 w-4" />
