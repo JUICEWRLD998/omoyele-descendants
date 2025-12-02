@@ -69,11 +69,10 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
       <div className="flex h-20 items-center px-6">
         <Link 
           href="/" 
-          className="flex items-center gap-2.5 font-bold transition-opacity hover:opacity-80" 
+          className="flex items-center transition-opacity hover:opacity-80" 
           onClick={onLinkClick}
         >
-          <TreePine className="h-6 w-6 text-primary" />
-          <span className="text-xl tracking-tight text-sidebar-foreground">OMOYELE</span>
+          <span className="text-2xl font-bold tracking-widest text-primary">OMOYELE</span>
         </Link>
       </div>
 
@@ -147,9 +146,8 @@ export function MobileHeader() {
   return (
     <header className="flex h-14 items-center justify-between border-b border-border bg-background px-4 lg:hidden">
       <MobileSidebar />
-      <Link href="/" className="flex items-center gap-2 font-bold">
-        <TreePine className="h-5 w-5 text-primary" />
-        <span className="text-lg">OMOYELE</span>
+      <Link href="/" className="flex items-center font-bold">
+        <span className="text-lg tracking-widest text-primary">OMOYELE</span>
       </Link>
       <div className="w-10" /> {/* Spacer for centering */}
     </header>
